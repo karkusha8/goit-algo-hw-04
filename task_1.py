@@ -2,12 +2,12 @@ from pathlib import Path
 
 def total_salary(path):
     if not path.strip():
-        return None, None
+        return "Шлях до файлу не вказано"
 
     file_path = Path(path)
 
     if not file_path.exists():
-        return None, None
+        return "Файл не знайдено."
 
     total = 0
     count_developers = 0
@@ -23,18 +23,17 @@ def total_salary(path):
                     continue
 
     if count_developers == 0:
-        return None, None
+        return "У файлі немає коректних зарплат."
 
     average = total / count_developers
     total = round(total, 2)
     average = round(average, 2)
     return total, average
 
-result = total_salary(r'path')
-
+result = total_salary(r"Вказати шлях до файлу")
 
 if isinstance(result, tuple):
     total, average = result
-    print(f"Загальна сума заробітної плати: {total}, Середня заробітна плата: {average}, ")
+    print(f"Загальна сума заробітної плати: {total}, Середня заробітна плата: {average}")
 else:
     print(result)
