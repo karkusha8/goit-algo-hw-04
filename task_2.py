@@ -2,12 +2,12 @@ from pathlib import Path
 
 def get_cats_info(path):
     if not path.strip():
-        return []
+        return "Шлях до файлу не вказано"
 
     file_path = Path(path)
 
     if not file_path.exists():
-        return []
+        return "Файл не знайдено."
 
     cats = []
     try:
@@ -24,12 +24,10 @@ def get_cats_info(path):
                         }
                         cats.append(cat_dict)
     except Exception as e:
-        return []
-
+        return f"Помилка при читанні файлу: {e}"
 
     if not cats:
-        return []
+        return "У файлі немає коректних записів."
 
-    return cats
-cats_info = get_cats_info(r"path/to/cats_file.txt")
-print(cats_info)
+    return '\n'.join(str(cat) for cat in cats)
+print(get_cats_info(r"Вказати шлях до файлу"))
