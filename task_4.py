@@ -1,36 +1,43 @@
+def input_error(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except KeyError:
+            return "Контакт не знайдено."
+        except ValueError:
+            return "Введіть ім'я та номер телефону через пробіл."
+        except IndexError:
+            return "Введіть команду та аргументи."
+    return wrapper
+
+
 def parse_input(user_input):
-    cmd, *args = user_input.split()
-    cmd = cmd.strip().lower()
-    return cmd, args
+    command, *args = user_input.split()
+    command = command.strip().lower()
+    return command, args
 
 
+@input_error
 def add_contact(args, contacts):
-    if len(args) != 2:
-        return "Неправильний формат. Використовуйте: add [ім'я] [номер]"
     name, phone = args
     contacts[name] = phone
     return "Контакт додано."
 
 
+@input_error
 def change_contact(args, contacts):
-    if len(args) != 2:
-        return "Неправильний формат. Використовуйте: change [ім'я] [новий номер]"
     name, phone = args
     if name in contacts:
         contacts[name] = phone
         return "Контакт оновлено."
     else:
-        return "Контакт не знайдено."
+        raise KeyError
 
 
+@input_error
 def show_phone(args, contacts):
-    if len(args) != 1:
-        return "Неправильний формат. Використовуйте: phone [ім'я]"
     name = args[0]
-    if name in contacts:
-        return contacts[name]
-    else:
-        return "Контакт не знайдено."
+    return contacts[name]
 
 
 def show_all(contacts):
@@ -48,7 +55,15 @@ def main():
 
     while True:
         user_input = input("Enter a command: ")
-        command, args = parse_input(user_input)
+        if not user_input.strip():
+            print("Введіть команду.")
+            continue
+
+        try:
+            command, args = parse_input(user_input)
+        except ValueError:
+            print("Невірна команда.")
+            continue
 
         if command in ["close", "exit"]:
             print("Good bye!")
@@ -71,6 +86,7 @@ def main():
 
         else:
             print("Invalid command.")
+
 
 if __name__ == "__main__":
     main()
